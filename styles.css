@@ -1,0 +1,21 @@
+.mod-audioanswer .mod-audioanswer-question {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.mod-audioanswer .mod-audioanswer-timer {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.mod-audioanswer audio {
+    min-height: 40px;
+}
+
+.mod-audioanswer-recorder-card {
+    max-width: 760px;
+}
+
+.mod-audioanswer-controls {
+    gap: .5rem;
+}

@@ -1,0 +1,84 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_audioanswer/recorder
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+<div class="mod-audioanswer" data-region="audioanswer-recorder">
+    {{#introhtml}}
+        <div class="mod-audioanswer-intro mb-4">{{{introhtml}}}</div>
+    {{/introhtml}}
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="h4 mb-3">{{#str}}question, mod_audioanswer{{/str}}</h2>
+            <div class="mod-audioanswer-question">{{{questionhtml}}}</div>
+            <div class="text-muted mt-3">
+                {{timelimittext}}
+            </div>
+        </div>
+    </div>
+
+    {{#canviewresponses}}
+        <div class="mb-4">
+            <a class="btn btn-secondary" href="{{reporturl}}">{{#str}}viewresponses, mod_audioanswer{{/str}}</a>
+        </div>
+    {{/canviewresponses}}
+
+    {{#cananswer}}
+        {{#hasresponse}}
+            <div class="alert alert-info">
+                <div class="font-weight-bold mb-2">{{#str}}currentresponse, mod_audioanswer{{/str}}</div>
+                <audio controls preload="metadata" src="{{audiourl}}" class="w-100"></audio>
+                <div class="small mt-2">{{#str}}lastsubmitted, mod_audioanswer{{/str}}: {{submittedat}}</div>
+                <div class="small mt-1">{{#str}}replacehint, mod_audioanswer{{/str}}</div>
+            </div>
+        {{/hasresponse}}
+
+        <div class="card mod-audioanswer-recorder-card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center mod-audioanswer-controls mb-3">
+                    <button type="button" class="btn btn-primary" data-action="record">
+                        {{#str}}record, mod_audioanswer{{/str}}
+                    </button>
+                    <button type="button" class="btn btn-danger" data-action="stop" disabled>
+                        {{#str}}stoprecording, mod_audioanswer{{/str}}
+                    </button>
+                    <span class="mod-audioanswer-timer" data-region="timer" aria-live="polite">00:00 / {{maxtimeformatted}}</span>
+                </div>
+
+                <div class="alert alert-light border" data-region="status" aria-live="polite">
+                    {{#str}}readytorecord, mod_audioanswer{{/str}}
+                </div>
+
+                <div data-region="preview-wrapper" class="d-none mt-3">
+                    <label class="font-weight-bold d-block" for="audioanswer-preview-{{maxduration}}">
+                        {{#str}}preview, mod_audioanswer{{/str}}
+                    </label>
+                    <audio id="audioanswer-preview-{{maxduration}}" controls data-region="preview" class="w-100"></audio>
+                    <button type="button" class="btn btn-success mt-3" data-action="save" disabled>
+                        {{#str}}saveanswer, mod_audioanswer{{/str}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {{/cananswer}}
+</div>
