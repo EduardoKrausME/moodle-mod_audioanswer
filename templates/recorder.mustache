@@ -39,7 +39,7 @@
 
     {{#canviewresponses}}
         <div class="mb-4">
-            <a class="btn btn-secondary" href="{{reporturl}}">{{#str}}viewresponses, mod_audioanswer{{/str}}</a>
+            <a class="btn btn-secondary" href="{{{reporturl}}}">{{#str}}viewresponses, mod_audioanswer{{/str}}</a>
         </div>
     {{/canviewresponses}}
 
@@ -47,7 +47,7 @@
         {{#hasresponse}}
             <div class="alert alert-info">
                 <div class="font-weight-bold mb-2">{{#str}}currentresponse, mod_audioanswer{{/str}}</div>
-                <audio controls preload="metadata" src="{{audiourl}}" class="w-100"></audio>
+                <audio controls preload="metadata" src="{{{audiourl}}}" class="w-100"></audio>
                 <div class="small mt-2">{{#str}}lastsubmitted, mod_audioanswer{{/str}}: {{submittedat}}</div>
                 <div class="small mt-1">{{#str}}replacehint, mod_audioanswer{{/str}}</div>
             </div>
