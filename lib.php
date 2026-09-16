@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_audioanswer\group_access;
 use mod_audioanswer\instance_manager;
 
 /**
@@ -37,6 +38,8 @@ function audioanswer_supports($feature) {
         FEATURE_BACKUP_MOODLE2 => true,
         FEATURE_COMPLETION_TRACKS_VIEWS => true,
         FEATURE_COMPLETION_HAS_RULES => true,
+        FEATURE_GROUPS => true,
+        FEATURE_GROUPINGS => true,
         FEATURE_MOD_PURPOSE => MOD_PURPOSE_ASSESSMENT,
         default => null,
     };
@@ -105,8 +108,14 @@ function audioanswer_pluginfile($course, $cm, $context, $filearea, $args, $force
         return false;
     }
 
-    if ((int)$response->userid !== (int)$USER->id && !has_capability("mod/audioanswer:viewresponses", $context)) {
-        return false;
+    if ((int)$response->userid !== (int)$USER->id) {
+        if (!has_capability("mod/audioanswer:viewresponses", $context)) {
+            return false;
+        }
+
+        if (!group_access::can_view_user($cm, $course, $context, (int)$response->userid)) {
+            return false;
+        }
     }
 
     $filename = array_pop($args);

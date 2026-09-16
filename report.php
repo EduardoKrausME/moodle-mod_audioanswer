@@ -40,7 +40,29 @@ $PAGE->set_title(get_string("responses", "mod_audioanswer"));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 
-$total = $DB->count_records("audioanswer_response", ["audioanswerid" => $audioanswer->id]);
+$groupmode = groups_get_activity_groupmode($cm, $course);
+$currentgroup = $groupmode === NOGROUPS ? 0 : groups_get_activity_group($cm, true);
+$groupjoin = "";
+$groupwhere = "";
+$params = ["audioanswerid" => $audioanswer->id];
+
+if ($groupmode === SEPARATEGROUPS && !$currentgroup &&
+        !has_capability("moodle/site:accessallgroups", $context)) {
+    $groupwhere = " AND 1 = 0";
+} else if ($currentgroup > 0) {
+    $groupjoin = " JOIN {groups_members} gm
+                        ON gm.userid = r.userid
+                       AND gm.groupid = :currentgroup";
+    $params["currentgroup"] = $currentgroup;
+}
+
+$total = $DB->count_records_sql(
+    "SELECT COUNT(r.id)
+       FROM {audioanswer_response} r
+       {$groupjoin}
+      WHERE r.audioanswerid = :audioanswerid{$groupwhere}",
+    $params
+);
 
 $table = new flexible_table("mod-audioanswer-responses-" . $cm->id);
 $table->define_columns(["student", "audio", "duration", "submitted"]);
@@ -59,12 +81,13 @@ $sql = "SELECT r.*, u.firstname, u.lastname, u.firstnamephonetic, u.lastnamephon
                u.middlename, u.alternatename
           FROM {audioanswer_response} r
           JOIN {user} u ON u.id = r.userid
-         WHERE r.audioanswerid = :audioanswerid
+          {$groupjoin}
+         WHERE r.audioanswerid = :audioanswerid{$groupwhere}
       ORDER BY r.timemodified DESC";
 
 $records = $DB->get_records_sql(
     $sql,
-    ["audioanswerid" => $audioanswer->id],
+    $params,
     $table->get_page_start(),
     $table->get_page_size()
 );
@@ -72,6 +95,10 @@ $records = $DB->get_records_sql(
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($audioanswer->name));
 echo html_writer::div(format_text($audioanswer->question, FORMAT_PLAIN, ["context" => $context]), "mb-4");
+
+if ($groupmode !== NOGROUPS) {
+    groups_print_activity_menu($cm, $url);
+}
 
 echo $OUTPUT->single_button(
     new moodle_url("/mod/audioanswer/view.php", ["id" => $cm->id]),
