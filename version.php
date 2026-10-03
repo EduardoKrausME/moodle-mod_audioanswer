@@ -23,8 +23,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$plugin->version = 2026091800;
-$plugin->release = '1.1.3';
+$plugin->version = 2026100300;
+$plugin->release = '1.1.4';
 $plugin->component = "mod_audioanswer";
 $plugin->requires = 2024100700;
 $plugin->maturity = MATURITY_STABLE;
