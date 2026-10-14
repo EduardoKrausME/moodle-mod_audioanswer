@@ -65,10 +65,11 @@ $total = $DB->count_records_sql(
 );
 
 $table = new flexible_table("mod-audioanswer-responses-" . $cm->id);
-$table->define_columns(["student", "audio", "duration", "submitted"]);
+$table->define_columns(["student", "audio", "transcription", "duration", "submitted"]);
 $table->define_headers([
     get_string("student", "mod_audioanswer"),
     get_string("audio", "mod_audioanswer"),
+    get_string("transcription", "mod_audioanswer"),
     get_string("duration", "mod_audioanswer"),
     get_string("submitted", "mod_audioanswer"),
 ]);
@@ -117,7 +118,32 @@ foreach ($records as $record) {
     ]);
     $duration = sprintf("%02d:%02d", intdiv((int)$record->duration, 60), (int)$record->duration % 60);
     $submitted = userdate((int)$record->timemodified);
-    $table->add_data([$student, $player, $duration, $submitted]);
+    $transcription = "";
+    if ($record->transcriptionstatus === "ready") {
+        $transcription = html_writer::div(
+            trim((string)$record->transcription) === "" ?
+                get_string("transcriptionempty", "mod_audioanswer") : nl2br(s($record->transcription)),
+            "mod-audioanswer-transcription"
+        );
+    } else if (!empty($audioanswer->transcriptionenabled)) {
+        if ($record->transcriptionstatus === "pending") {
+            $transcription = get_string("transcriptionpending", "mod_audioanswer");
+        } else if (!\mod_audioanswer\transcription_manager::available()) {
+            $transcription = get_string("transcriptionunavailable", "mod_audioanswer");
+        } else {
+            $transcription = $record->transcriptionstatus === "failed" ?
+                get_string("transcriptionfailed", "mod_audioanswer") : "";
+            $retryurl = new moodle_url("/mod/audioanswer/transcribe.php", [
+                "id" => $cm->id,
+                "responseid" => $record->id,
+                "sesskey" => sesskey(),
+            ]);
+            $transcription .= $OUTPUT->single_button(
+                $retryurl, get_string("requesttranscription", "mod_audioanswer"), "post"
+            );
+        }
+    }
+    $table->add_data([$student, $player, $transcription, $duration, $submitted]);
 }
 
 $table->finish_output();

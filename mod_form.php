@@ -57,6 +57,15 @@ class mod_audioanswer_mod_form extends moodleform_mod {
         $mform->setDefault("maxduration", 60);
         $mform->addHelpButton("maxduration", "maxduration", "mod_audioanswer");
 
+        $mform->addElement("advcheckbox", "transcriptionenabled", "",
+            get_string("enabletranscription", "mod_audioanswer"));
+        $mform->setDefault("transcriptionenabled", 0);
+        $mform->addHelpButton("transcriptionenabled", "enabletranscription", "mod_audioanswer");
+        if (!\mod_audioanswer\transcription_manager::available()) {
+            $mform->addElement("static", "transcriptionnotice", "",
+                get_string("transcriptionunavailable", "mod_audioanswer"));
+        }
+
         $this->standard_intro_elements();
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();

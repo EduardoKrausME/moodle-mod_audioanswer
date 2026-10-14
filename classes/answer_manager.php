@@ -140,12 +140,27 @@ class answer_manager {
             $response->mimetype = $mimetype;
             $response->filename = $filename;
             $response->timemodified = $now;
+            // A replacement invalidates any earlier transcript, even if its worker is still running.
+            $response->transcription = null;
+            $response->transcriptionstatus = "none";
             $DB->update_record("audioanswer_response", $response);
         } catch (\Throwable $exception) {
             if ($isnew && !empty($response->id)) {
                 $DB->delete_records("audioanswer_response", ["id" => $response->id]);
             }
             throw $exception;
+        }
+
+        // Queue after the audio has been saved. Transcription is optional and its
+        // availability must never cause a valid student submission to fail.
+        if (!empty($audioanswer->transcriptionenabled)) {
+            try {
+                \mod_audioanswer\transcription_manager::queue($audioanswer, $response, $newfile);
+            } catch (\Throwable $exception) {
+                $response->transcriptionstatus = "failed";
+                $DB->update_record("audioanswer_response", $response);
+                debugging("Could not queue audioanswer transcription: " . get_class($exception), DEBUG_DEVELOPER);
+            }
         }
 
         \mod_audioanswer\event\answer_submitted::create([

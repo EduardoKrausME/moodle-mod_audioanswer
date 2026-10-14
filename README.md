@@ -32,6 +32,29 @@ Copy the `audioanswer` directory to `mod/audioanswer`, then visit Site administr
 
 The browser recorder stops automatically at the configured limit. The upload endpoint also rejects a declared duration above the configured limit. Moodle core does not provide a codec-independent server-side audio duration parser, so a deliberately manipulated multipart request cannot be independently measured without an external media probe such as ffprobe.
 
+## Optional AI transcription with local_ai_bridge
+
+Install [local_ai_bridge](https://github.com/EduardoKrausME/moodle-local_ai_bridge) and
+configure a tenant purpose with ID \`audioanswer-transcription\`. Add a route for the users'
+AI role to an OpenAI connection using a speech-to-text model (for example
+\`gpt-4o-mini-transcribe\`). Configure access and credits in AI Bridge, and keep Moodle
+cron running to process ad hoc transcription tasks.
+
+Teachers can enable **Transcribe audio answers with AI Bridge** on each activity. Each
+new recording is saved normally and queued for transcription without holding the HTTP
+upload open. Students see their own transcript and progress; teachers with response
+permissions see transcripts and a retry button for failed/older recordings in the
+responses report. Re-recording clears old text, and a worker never attaches an outdated
+transcript to a newer answer. Audio remains playable when the bridge is missing, a route
+fails, or credits are exhausted.
+
+Important: When enabled, recordings are transmitted to the configured third-party AI
+provider. Review data protection requirements before enabling this feature. The plugin
+stores only the final text and status alongside the existing private audio; AI Bridge
+logs usage metadata without storing the recording or transcript. Deleting a response
+removes its transcript; backups and Moodle Privacy API export include transcript data.
+Transcription is an assistive aid and can make mistakes; it does not grade answers.
+
 ## License
 
 GPL v3 or later.
