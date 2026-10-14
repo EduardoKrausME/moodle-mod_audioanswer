@@ -41,6 +41,7 @@ class backup_audioanswer_activity_structure_step extends backup_activity_structu
             "question",
             "maxduration",
             "completiononsubmit",
+            "transcriptionenabled",
             "timecreated",
             "timemodified",
         ]);
@@ -50,6 +51,8 @@ class backup_audioanswer_activity_structure_step extends backup_activity_structu
             "duration",
             "mimetype",
             "filename",
+            "transcriptionstatus",
+            "transcription",
             "timecreated",
             "timemodified",
         ]);

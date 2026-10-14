@@ -52,12 +52,17 @@ class provider implements
                 "duration" => "privacy:metadata:audioanswer_response:duration",
                 "mimetype" => "privacy:metadata:audioanswer_response:mimetype",
                 "filename" => "privacy:metadata:audioanswer_response:filename",
+                "transcription" => "privacy:metadata:audioanswer_response:transcription",
+                "transcriptionstatus" => "privacy:metadata:audioanswer_response:transcriptionstatus",
                 "timecreated" => "privacy:metadata:audioanswer_response:timecreated",
                 "timemodified" => "privacy:metadata:audioanswer_response:timemodified",
             ],
             "privacy:metadata:audioanswer_response"
         );
         $collection->add_subsystem_link("core_files", [], "privacy:metadata:core_files");
+        $collection->add_external_location_link("ai_provider", [
+            "audio" => "privacy:metadata:ai_provider:audio",
+        ], "privacy:metadata:ai_provider");
 
         return $collection;
     }
@@ -117,6 +122,8 @@ class provider implements
             $data = (object)[
                 "duration" => $response->duration,
                 "filename" => $response->filename,
+                "transcription" => $response->transcription,
+                "transcriptionstatus" => $response->transcriptionstatus,
                 "timecreated" => transform::datetime($response->timecreated),
                 "timemodified" => transform::datetime($response->timemodified),
             ];

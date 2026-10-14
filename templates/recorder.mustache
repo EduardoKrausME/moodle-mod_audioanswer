@@ -50,6 +50,14 @@
                 <audio controls preload="metadata" src="{{{audiourl}}}" class="w-100"></audio>
                 <div class="small mt-2">{{#str}}lastsubmitted, mod_audioanswer{{/str}}: {{submittedat}}</div>
                 <div class="small mt-1">{{#str}}replacehint, mod_audioanswer{{/str}}</div>
+                {{#showtranscription}}
+                    <div class="mod-audioanswer-transcription mt-3">
+                        <div class="font-weight-bold">{{#str}}transcription, mod_audioanswer{{/str}}</div>
+                        {{#transcriptionready}}<div class="mt-1">{{{transcriptionhtml}}}</div>{{/transcriptionready}}
+                        {{#transcriptionpending}}<div class="text-muted mt-1">{{#str}}transcriptionpending, mod_audioanswer{{/str}}</div>{{/transcriptionpending}}
+                        {{#transcriptionfailed}}<div class="text-muted mt-1">{{#str}}transcriptionfailed, mod_audioanswer{{/str}}</div>{{/transcriptionfailed}}
+                    </div>
+                {{/showtranscription}}
             </div>
         {{/hasresponse}}
 

@@ -65,8 +65,8 @@ class transcription_manager {
             'filename' => $file->get_filename(),
             'contenthash' => $file->get_contenthash(),
         ]);
-        manager::queue_adhoc_task($task);
         $DB->set_field('audioanswer_response', 'transcriptionstatus', 'pending', ['id' => $response->id]);
+        manager::queue_adhoc_task($task);
     }
 
     /**

@@ -97,6 +97,13 @@ $data = [
     "hasresponse" => !empty($response),
     "audiourl" => $audiourl,
     "submittedat" => $response ? userdate($response->timemodified) : "",
+    "showtranscription" => $response && (!empty($audioanswer->transcriptionenabled) ||
+        $response->transcriptionstatus === "ready"),
+    "transcriptionready" => $response && $response->transcriptionstatus === "ready",
+    "transcriptionpending" => $response && $response->transcriptionstatus === "pending",
+    "transcriptionfailed" => $response && $response->transcriptionstatus === "failed",
+    "transcriptionhtml" => $response && trim((string)$response->transcription) !== "" ?
+        nl2br(s($response->transcription)) : get_string("transcriptionempty", "mod_audioanswer"),
 ];
 
 echo $OUTPUT->header();
