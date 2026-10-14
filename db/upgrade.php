@@ -29,5 +29,31 @@
  * @return bool
  */
 function xmldb_audioanswer_upgrade($oldversion) {
+    global $DB;
+
+    if ($oldversion < 2026101401) {
+        $dbman = $DB->get_manager();
+        $activitytable = new xmldb_table('audioanswer');
+        $enabled = new xmldb_field('transcriptionenabled', XMLDB_TYPE_INTEGER, '1',
+            null, XMLDB_NOTNULL, null, '0', 'completiononsubmit');
+        if (!$dbman->field_exists($activitytable, $enabled)) {
+            $dbman->add_field($activitytable, $enabled);
+        }
+
+        $responsetable = new xmldb_table('audioanswer_response');
+        $status = new xmldb_field('transcriptionstatus', XMLDB_TYPE_CHAR, '20',
+            null, XMLDB_NOTNULL, null, 'none', 'filename');
+        if (!$dbman->field_exists($responsetable, $status)) {
+            $dbman->add_field($responsetable, $status);
+        }
+        $transcription = new xmldb_field('transcription', XMLDB_TYPE_TEXT, null,
+            null, null, null, null, 'transcriptionstatus');
+        if (!$dbman->field_exists($responsetable, $transcription)) {
+            $dbman->add_field($responsetable, $transcription);
+        }
+
+        upgrade_mod_savepoint(true, 2026101401, 'audioanswer');
+    }
+
     return true;
 }

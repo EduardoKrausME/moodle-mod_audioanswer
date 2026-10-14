@@ -43,6 +43,7 @@ class instance_manager {
         $data->timecreated = $now;
         $data->timemodified = $now;
         $data->completiononsubmit = empty($data->completiononsubmit) ? 0 : 1;
+        $data->transcriptionenabled = empty($data->transcriptionenabled) ? 0 : 1;
 
         return (int)$DB->insert_record("audioanswer", $data);
     }
@@ -61,6 +62,7 @@ class instance_manager {
         $data->id = $data->instance;
         $data->timemodified = time();
         $data->completiononsubmit = empty($data->completiononsubmit) ? 0 : 1;
+        $data->transcriptionenabled = empty($data->transcriptionenabled) ? 0 : 1;
 
         return $DB->update_record("audioanswer", $data);
     }
