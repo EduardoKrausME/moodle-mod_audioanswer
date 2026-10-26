@@ -30,8 +30,7 @@ The browser recorder stops automatically at the configured limit. The upload end
 
 ## Optional AI transcription with local_ai_bridge
 
-Install [local_ai_bridge](https://github.com/EduardoKrausME/moodle-local_ai_bridge) and
-configure a tenant purpose with ID \`audioanswer-transcription\`. Add a route for the users'
+Optional transcription requires [local_ai_bridge](https://github.com/EduardoKrausME/moodle-local_ai_bridge) with a configured tenant purpose with ID \`audioanswer-transcription\`. Add a route for the users'
 AI role to an OpenAI connection using a speech-to-text model (for example
 \`gpt-4o-mini-transcribe\`). Configure access and credits in AI Bridge, and keep Moodle
 cron running to process ad hoc transcription tasks.
