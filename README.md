@@ -24,10 +24,6 @@ The teacher writes one question and selects a recording limit of 30, 60, or 120 
 - A modern browser with MediaRecorder and getUserMedia support.
 - HTTPS is normally required by browsers for microphone access, except on localhost.
 
-## Installation
-
-Copy the `audioanswer` directory to `mod/audioanswer`, then visit Site administration > Notifications.
-
 ## Notes about the duration limit
 
 The browser recorder stops automatically at the configured limit. The upload endpoint also rejects a declared duration above the configured limit. Moodle core does not provide a codec-independent server-side audio duration parser, so a deliberately manipulated multipart request cannot be independently measured without an external media probe such as ffprobe.
